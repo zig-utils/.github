@@ -1,0 +1,18 @@
+node_modules/
+dist/
+
+# Per-library docs are cloned here by scripts/build-docs.ts, never committed —
+# each library's documentation lives in its own repository.
+.docs-src/
+
+# ts-cloud driver state (which box this project's sites are deployed onto).
+.ts-cloud/
+
+.DS_Store
+*.log
+
+# stx render cache.
+.stx/
+
+# ts-cloud driver state written by the deploy (which box, which release).
+storage/cloud/state/
