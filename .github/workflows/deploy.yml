@@ -35,8 +35,12 @@ jobs:
       - run: bun install
 
       # ts-cloud reaches the shared box over SSH (hetzner.sshPrivateKeyPath).
-      # Same DEPLOY_SSH_KEY authorized on the box as the other tenants use;
-      # the .pub is derived from it so one secret suffices.
+      # DEPLOY_SSH_KEY is a dedicated, passphrase-less ed25519 key authorized on
+      # the box for this project — a personal key cannot be used here, because
+      # ssh-keygen cannot derive the public half of a passphrase-protected key
+      # non-interactively and the step dies before the deploy runs.
+      # StrictHostKeyChecking=accept-new so the first connection is not an
+      # interactive prompt on a runner with no TTY.
       - name: Add deploy SSH key
         run: |
           mkdir -p ~/.ssh && chmod 700 ~/.ssh
@@ -44,6 +48,8 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keygen -y -f ~/.ssh/id_ed25519 > ~/.ssh/id_ed25519.pub
           chmod 644 ~/.ssh/id_ed25519.pub
+          printf 'Host *\n  StrictHostKeyChecking accept-new\n  UserKnownHostsFile ~/.ssh/known_hosts\n' > ~/.ssh/config
+          chmod 600 ~/.ssh/config
 
       # The deploy runs each site's own `build` command, which clones the
       # library repositories — so nothing is prebuilt here.
