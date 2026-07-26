@@ -82,10 +82,8 @@ const config: CloudConfig = {
   },
 
   sites: {
-    // The marketing page. Hand-written static HTML rather than a generated
-    // site: it is one page whose whole job is to route people to the library
-    // docs, so a generator would add a toolchain without adding anything a
-    // reader sees.
+    // The marketing page: one stx page rendered to static HTML, whose whole
+    // job is routing people to the library documentation.
     main: {
       deploy: 'server',
       root: 'dist/site',
@@ -108,11 +106,15 @@ const config: CloudConfig = {
         lib.slug.replace(/-/g, ''),
         {
           deploy: 'server' as const,
-          root: `dist/${lib.slug}`,
+          // BunPress renders into a `.bunpress` subdirectory of --outdir, so
+          // THAT is the document root — shipping `dist/<slug>` would serve a
+          // directory whose only entry is `.bunpress`.
+          root: `dist/${lib.slug}/.bunpress`,
           path: '/',
           domain: `${lib.slug}.zig-utils.org`,
           // BunPress emits clean directory URLs.
           pathRewriteStyle: 'directory' as const,
+          build: `bun scripts/build-docs.ts ${lib.slug}`,
         },
       ]),
     ),

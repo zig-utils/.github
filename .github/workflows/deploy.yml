@@ -1,0 +1,40 @@
+name: Deploy
+
+# Push-to-deploy for zig-utils.org and every <slug>.zig-utils.org docs site.
+#
+# This project ATTACHES to the shared box owned by the `stacks` project
+# (cloud.config.ts sets `cloud.attachTo: 'stacks'`), so it never provisions —
+# it builds its sites and ships only those onto the existing box.
+on:
+  push:
+    branches: [main]
+  # The docs are built from each library's own repository, so a change over
+  # there should reach the site without a commit here.
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - run: bun install --frozen-lockfile
+
+      # The deploy runs each site's own `build` command, which clones the
+      # library repositories — so nothing is prebuilt here.
+      - name: Deploy (production)
+        env:
+          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+          PORKBUN_API_KEY: ${{ secrets.PORKBUN_API_KEY }}
+          PORKBUN_SECRET_KEY: ${{ secrets.PORKBUN_SECRET_KEY }}
+        run: bunx --bun @stacksjs/ts-cloud deploy --env production --yes
