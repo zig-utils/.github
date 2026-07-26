@@ -165,13 +165,20 @@ pantry add ${lib.repo.split('/')[1]}
   // lists the declarations that actually exist with the doc comments as
   // written. Skipped entirely when a library exposes nothing public, rather
   // than publishing an empty page.
-  let hasApi = false
+  //
+  // A library that already ships its own API page keeps it: a hand-written
+  // reference beats a generated one, and writing ours anyway collided with it
+  // on case-insensitive filesystems — zig-regex's `docs/API.md` and a
+  // generated `api.md` are the SAME file on macOS, so the site ended up with
+  // one page reachable at /API and a dead link at /api.
+  const ownApiPage = pages.find(f => /^api\.md$/i.test(f))
+  let apiLink: string | undefined = ownApiPage ? `/${ownApiPage.replace(/\.md$/i, '')}` : undefined
   const moduleRoot = resolveModuleRoot(src, lib.repo.split('/')[1])
-  if (moduleRoot) {
+  if (!ownApiPage && moduleRoot) {
     const api = renderApiMarkdown(lib.name, collectApi(moduleRoot))
     if (api) {
       writeFileSync(join(stage, 'api.md'), api)
-      hasApi = true
+      apiLink = '/api'
     }
   }
 
@@ -179,8 +186,9 @@ pantry add ${lib.repo.split('/')[1]}
   // page of their own so they are reachable from the sidebar. Only written
   // when the README actually has Zig examples; nothing is invented.
   const examples = [...readme.matchAll(/```zig\n([\s\S]*?)```/g)].map(m => m[1].trimEnd())
+  const ownUsagePage = pages.find(f => /^usage\.md$/i.test(f))
   let hasUsage = false
-  if (examples.length > 0) {
+  if (examples.length > 0 && !ownUsagePage) {
     writeFileSync(join(stage, 'usage.md'), `# Usage
 
 ${examples.length === 1 ? 'The example' : `The ${examples.length} examples`} below ${examples.length === 1 ? 'is' : 'are'} taken from ${lib.name}'s README.
@@ -194,8 +202,9 @@ ${examples.map(e => `\`\`\`zig\n${e}\n\`\`\``).join('\n\n')}
     { text: 'Introduction', link: '/' },
     { text: 'Installation', link: '/install' },
     ...(hasUsage ? [{ text: 'Usage', link: '/usage' }] : []),
-    ...(hasApi ? [{ text: 'API reference', link: '/api' }] : []),
+    ...(apiLink ? [{ text: 'API reference', link: apiLink }] : []),
     ...pages
+      // Anything already surfaced above is not repeated further down.
       .filter(f => !['index.md', 'install.md', 'usage.md', 'api.md'].includes(f.toLowerCase()))
       .sort()
       .map(f => ({ text: titleFor(f), link: `/${f.replace(/\.md$/i, '')}` })),
@@ -238,7 +247,7 @@ export default config
     console.error(`  ✗ build failed (exit ${built.exitCode})`)
     return false
   }
-  console.log(`  ✓ ${sidebarItems.length} page(s)${hasApi ? ' (incl. API reference)' : ''} → dist/${lib.slug}`)
+  console.log(`  ✓ ${sidebarItems.length} page(s)${apiLink ? ` (API at ${apiLink})` : ''} → dist/${lib.slug}`)
   return true
 }
 
