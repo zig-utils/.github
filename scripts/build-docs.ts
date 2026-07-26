@@ -198,6 +198,26 @@ ${examples.map(e => `\`\`\`zig\n${e}\n\`\`\``).join('\n\n')}
     hasUsage = true
   }
 
+  // community.md — the same two places to talk that every README points at,
+  // as a page of its own so a reader who arrives at the docs rather than the
+  // repository still finds them. A library that ships its own community page
+  // keeps it.
+  const ownCommunityPage = pages.find(f => /^community\.md$/i.test(f))
+  if (!ownCommunityPage) {
+    writeFileSync(join(stage, 'community.md'), `# Community
+
+For help, discussion about best practices, or any other conversation that would benefit from being searchable:
+
+[Discussions on GitHub](https://github.com/${lib.repo}/discussions)
+
+For casual chit-chat with others using this package:
+
+[Join the Stacks Discord Server](https://stacksjs.com/discord)
+
+Bugs and feature requests belong in [${lib.name}'s issues](https://github.com/${lib.repo}/issues), where they can be tracked to a fix.
+`)
+  }
+
   const sidebarItems = [
     { text: 'Introduction', link: '/' },
     { text: 'Installation', link: '/install' },
@@ -205,9 +225,12 @@ ${examples.map(e => `\`\`\`zig\n${e}\n\`\`\``).join('\n\n')}
     ...(apiLink ? [{ text: 'API reference', link: apiLink }] : []),
     ...pages
       // Anything already surfaced above is not repeated further down.
-      .filter(f => !['index.md', 'install.md', 'usage.md', 'api.md'].includes(f.toLowerCase()))
+      .filter(f => !['index.md', 'install.md', 'usage.md', 'api.md', 'community.md'].includes(f.toLowerCase()))
       .sort()
       .map(f => ({ text: titleFor(f), link: `/${f.replace(/\.md$/i, '')}` })),
+    // Last in the sidebar: it is where you go when the pages above did not
+    // answer the question.
+    { text: 'Community', link: `/${(ownCommunityPage ?? 'community.md').replace(/\.md$/i, '')}` },
   ]
 
   writeFileSync(join(stage, 'bunpress.config.ts'), `import type { BunPressConfig } from '@stacksjs/bunpress'
@@ -225,6 +248,7 @@ const config: BunPressConfig = ${JSON.stringify({
       nav: [
         { text: 'All libraries', link: 'https://zig-utils.org' },
         { text: 'GitHub', link: `https://github.com/${lib.repo}` },
+        { text: 'Discord', link: 'https://stacksjs.com/discord' },
       ],
       sidebar: [{ text: lib.name, items: sidebarItems }],
       socialLinks: [{ icon: 'github', link: `https://github.com/${lib.repo}` }],
