@@ -20,6 +20,7 @@ import { join, resolve } from 'node:path'
 import process from 'node:process'
 import { $ } from 'bun'
 import { LIBRARIES, type Library } from './libraries'
+import { collectApi, renderApiMarkdown, resolveModuleRoot } from './zig-api'
 
 const ROOT = resolve(import.meta.dir, '..')
 // Cloned sources and staged markdown are transient build scratch, so they live
@@ -160,11 +161,42 @@ pantry add ${lib.repo.split('/')[1]}
 \`\`\`
 `)
 
+  // api.md — generated from the library's own Zig source, so the reference
+  // lists the declarations that actually exist with the doc comments as
+  // written. Skipped entirely when a library exposes nothing public, rather
+  // than publishing an empty page.
+  let hasApi = false
+  const moduleRoot = resolveModuleRoot(src, lib.repo.split('/')[1])
+  if (moduleRoot) {
+    const api = renderApiMarkdown(lib.name, collectApi(moduleRoot))
+    if (api) {
+      writeFileSync(join(stage, 'api.md'), api)
+      hasApi = true
+    }
+  }
+
+  // usage.md — the fenced examples the README already carries, lifted into a
+  // page of their own so they are reachable from the sidebar. Only written
+  // when the README actually has Zig examples; nothing is invented.
+  const examples = [...readme.matchAll(/```zig\n([\s\S]*?)```/g)].map(m => m[1].trimEnd())
+  let hasUsage = false
+  if (examples.length > 0) {
+    writeFileSync(join(stage, 'usage.md'), `# Usage
+
+${examples.length === 1 ? 'The example' : `The ${examples.length} examples`} below ${examples.length === 1 ? 'is' : 'are'} taken from ${lib.name}'s README.
+
+${examples.map(e => `\`\`\`zig\n${e}\n\`\`\``).join('\n\n')}
+`)
+    hasUsage = true
+  }
+
   const sidebarItems = [
     { text: 'Introduction', link: '/' },
     { text: 'Installation', link: '/install' },
+    ...(hasUsage ? [{ text: 'Usage', link: '/usage' }] : []),
+    ...(hasApi ? [{ text: 'API reference', link: '/api' }] : []),
     ...pages
-      .filter(f => f.toLowerCase() !== 'index.md' && f.toLowerCase() !== 'install.md')
+      .filter(f => !['index.md', 'install.md', 'usage.md', 'api.md'].includes(f.toLowerCase()))
       .sort()
       .map(f => ({ text: titleFor(f), link: `/${f.replace(/\.md$/i, '')}` })),
   ]
@@ -206,7 +238,7 @@ export default config
     console.error(`  ✗ build failed (exit ${built.exitCode})`)
     return false
   }
-  console.log(`  ✓ ${sidebarItems.length} page(s) → dist/${lib.slug}`)
+  console.log(`  ✓ ${sidebarItems.length} page(s)${hasApi ? ' (incl. API reference)' : ''} → dist/${lib.slug}`)
   return true
 }
 
