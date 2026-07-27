@@ -92,7 +92,7 @@ exe.root_module.addImport("regex", regex.module("regex"));</code></pre>
         <a class="inline-flex items-center gap-1.5 hover:text-zinc-900 dark:hover:text-zinc-100" href="https://github.com/zig-utils">
           <i class="i-hugeicons-github h-4 w-4"></i> GitHub
         </a>
-        <a class="inline-flex items-center gap-1.5 hover:text-zinc-900 dark:hover:text-zinc-100" href="https://stacksjs.com/discord">
+        <a class="inline-flex items-center gap-1.5 hover:text-zinc-900 dark:hover:text-zinc-100" href="https://discord.gg/f7wBym6JF2">
           <i class="i-hugeicons-discord h-4 w-4"></i> Discord
         </a>
         <a class="inline-flex items-center gap-1.5 hover:text-zinc-900 dark:hover:text-zinc-100" href="https://ziglang.org">

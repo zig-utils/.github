@@ -212,7 +212,7 @@ For help, discussion about best practices, or any other conversation that would 
 
 For casual chit-chat with others using this package:
 
-[Join the Stacks Discord Server](https://stacksjs.com/discord)
+[Join the zig-utils Discord Server](https://discord.gg/f7wBym6JF2)
 
 Bugs and feature requests belong in [${lib.name}'s issues](https://github.com/${lib.repo}/issues), where they can be tracked to a fix.
 `)
@@ -248,7 +248,7 @@ const config: BunPressConfig = ${JSON.stringify({
       nav: [
         { text: 'All libraries', link: 'https://zig-utils.org' },
         { text: 'GitHub', link: `https://github.com/${lib.repo}` },
-        { text: 'Discord', link: 'https://stacksjs.com/discord' },
+        { text: 'Discord', link: 'https://discord.gg/f7wBym6JF2' },
       ],
       sidebar: [{ text: lib.name, items: sidebarItems }],
       socialLinks: [{ icon: 'github', link: `https://github.com/${lib.repo}` }],

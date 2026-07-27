@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  <a href="https://stacksjs.com/discord">Discord</a> ·
+  <a href="https://discord.gg/f7wBym6JF2">Discord</a> ·
   <a href="https://ziglang.org">Zig</a> ·
   <a href="https://github.com/zig-utils">Repositories</a>
 </p>
@@ -79,7 +79,7 @@ Issues and pull requests are welcome on every repository. Good first steps: pick
 
 ## Community
 
-- 💬 [Discord](https://stacksjs.com/discord) — questions, design discussion, and release news
+- 💬 [Discord](https://discord.gg/f7wBym6JF2) — questions, design discussion, and release news
 - 🐛 GitHub Issues on the relevant repository — bugs and feature requests
 
 <p align="center">Made with 💙 · MIT licensed</p>
