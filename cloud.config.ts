@@ -95,6 +95,7 @@ const config: CloudConfig = {
     // Keep a memorable community URL on our own domain while allowing the
     // Discord invite itself to change without a cached permanent redirect.
     discord: {
+      deploy: 'server',
       domain: 'zig-utils.org',
       path: '/discord',
       redirect: {
@@ -108,7 +109,7 @@ const config: CloudConfig = {
     // reconciliation only walks the domains named in `sites`, so without an
     // explicit entry `www.zig-utils.org` gets a gateway route and no A record —
     // it resolves nowhere.
-    www: { domain: 'www.zig-utils.org', redirect: 'https://zig-utils.org' },
+    www: { deploy: 'server', domain: 'www.zig-utils.org', redirect: 'https://zig-utils.org' },
 
     // One documentation site per library, generated from LIBRARIES so the
     // marketing page, the build script and the deploy can never disagree about
