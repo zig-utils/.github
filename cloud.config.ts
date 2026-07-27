@@ -92,6 +92,18 @@ const config: CloudConfig = {
       build: 'bun scripts/build-site.ts',
     },
 
+    // Keep a memorable community URL on our own domain while allowing the
+    // Discord invite itself to change without a cached permanent redirect.
+    discord: {
+      domain: 'zig-utils.org',
+      path: '/discord',
+      redirect: {
+        to: 'https://discord.gg/f7wBym6JF2',
+        status: 302,
+        preservePath: false,
+      },
+    },
+
     // www → apex. rpx auto-adds this ROUTE for any apex domain, but DNS
     // reconciliation only walks the domains named in `sites`, so without an
     // explicit entry `www.zig-utils.org` gets a gateway route and no A record —
