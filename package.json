@@ -13,6 +13,6 @@
   "devDependencies": {
     "@stacksjs/bunpress": "^0.1.21",
     "@stacksjs/stx": "^0.2.99",
-    "@stacksjs/ts-cloud": "^0.7.58"
+    "@stacksjs/ts-cloud": "^0.7.78"
   }
 }
