@@ -71,7 +71,7 @@ Refer to each repository for its module name, installation instructions, and min
 
 #### Community
 
-* [Discord](https://discord.gg/f7wBym6JF2) - Questions, design discussions, and release news.
+* [Discord](https://stacksjs.com/discord) - Questions, design discussions, and release news.
 * [Repositories](https://github.com/zig-utils) - Explore every zig-utils project.
 * GitHub Issues - Bug reports, feature requests, and contribution opportunities.
 
