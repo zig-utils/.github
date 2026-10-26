@@ -39,6 +39,11 @@ Every project is written in **pure Zig**, has **zero external dependencies** unl
 * [zig-config](https://github.com/zig-utils/zig-config) - A typed configuration loader for files, environment variables, and defaults.
 * [zig-error-handling](https://github.com/zig-utils/zig-error-handling) - A zero-overhead `Result(T, E)` type with mapping, chaining, and pattern matching.
 
+#### Wearables
+
+* [zig-oura](https://github.com/zig-utils/zig-oura) - Native Oura BLE authentication, lossless history sync, and raw event decoding, with C, Swift, and portable TypeScript bindings. Experimental Ring 3/4/5 interoperability; hardware validation is still required.
+* [zig-garmin](https://github.com/zig-utils/zig-garmin) - Garmin BLE framing, GFDI file transfer, and telemetry decoding, with native and portable bindings.
+
 #### Testing & Benchmarking
 
 * [zig-test-framework](https://github.com/zig-utils/zig-test-framework) - Jest and Vitest-style testing with matchers, mocks, spies, snapshots, coverage, watch mode, and multiple reporters.
