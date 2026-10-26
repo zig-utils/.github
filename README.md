@@ -47,6 +47,13 @@ Every library here is **pure Zig**, **zero external dependencies** unless stated
 | [**zig-config**](https://github.com/zig-utils/zig-config) | A smart configuration loader — local files, home directory, env vars, and defaults, deep-merged into your typed config struct. |
 | [**zig-error-handling**](https://github.com/zig-utils/zig-error-handling) | A `Result(T, E)` type inspired by Rust and neverthrow: chainable `map` / `andThen`, pattern matching, and zero runtime overhead. |
 
+## ⌚ Wearables
+
+| Project | What it is |
+| --- | --- |
+| [**zig-oura**](https://github.com/zig-utils/zig-oura) | Native Oura BLE authentication, lossless history sync, and raw event decoding, with C, Swift, and portable TypeScript bindings. Experimental Ring 3/4/5 interoperability; physical firmware validation is still required. |
+| [**zig-garmin**](https://github.com/zig-utils/zig-garmin) | Garmin BLE framing, GFDI file transfer, and telemetry decoding, with native and portable bindings. |
+
 ## 🔬 Testing, Benchmarking & Release
 
 | Project | What it is |
